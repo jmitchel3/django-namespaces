@@ -1,0 +1,5 @@
+coverage
+Django>=4.0a1,<4.1
+pytest
+pytest-django
+pytest-randomly
