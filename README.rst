@@ -2,8 +2,7 @@
 django-namespaces
 ======================
 
-Enable users to add reactions to any Django model.
-
+Leverage namespaces in requests using Django.
 
 Documentation
 -------------
