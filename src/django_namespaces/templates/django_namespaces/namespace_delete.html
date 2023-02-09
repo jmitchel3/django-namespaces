@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div>
+
+{% include 'django_namespaces/snippets/namespace_update.html' with object=object form=form %}
+</div>
+
+<div style="border:1px solid red;border-radius: 3rem; padding: 2rem; margin: 2rem auto; text-align: center;">
+    <form action="{{ object.get_delete_url}}" method="POST">
+        {% csrf_token %}
+    
+    <h1>Delete {{ object.namespace }}?</h1>
+    <p>This action cannot be undone and might have unintended consequences.</p>
+    <input type='submit' value='Yes, delete.'>
+    <a href="{{ object.get_absolute_url }}">Cancel</a>
+</form>
+</div>
+
+{% endblock %}

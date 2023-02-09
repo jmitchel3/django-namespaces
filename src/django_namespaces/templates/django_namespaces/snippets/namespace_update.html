@@ -1,0 +1,19 @@
+{% if object %}
+<div id="#namespace-{{ object.id }}">
+<form method="POST" 
+    action="{{ object.get_absolute_url }}"
+    hx-post="{{ object.get_absolute_url }}"
+    hx-target="#namespace-create"
+    hx-trigger="submit"
+    >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update">
+    {% if request.namespace.value == object.namespace %}
+    <i>Activated namespace</i>
+    {% else %}
+    <a href="{{ object.get_activation_url }}">Activate</a>
+    {% endif %}
+</form>
+</div>
+{% endif %}

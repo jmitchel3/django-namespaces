@@ -1,0 +1,11 @@
+<div id="#namespace-create">
+    <form method="POST" action="{% url 'django_namespaces:create' %}"
+        hx-post="{% url 'django_namespaces:create' %}"
+        hx-target="#namespace-create"
+        hx-trigger="submit"
+        >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Create">
+    </form>
+</div>

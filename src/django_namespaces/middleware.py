@@ -37,42 +37,47 @@ class NamespaceMiddleware:
     ) -> HttpResponseBase | Awaitable[HttpResponseBase]:
         if self._is_coroutine:
             return self.__acall__(request)
-        namespace = NamespaceDetails(request)  # type: ignore [attr-defined]     
-        print(namespace == "", namespace is None, type(namespace), namespace.has_namespace)
-        if namespace.has_namespace:
-            request.namespace = namespace
-            request.has_namespace = True
+        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]     
+        if namespace_obj.has_namespace:
+            request.namespace = namespace_obj
         else:
             request.namespace = AnonymousNamespace()
-            request.has_namespace = False
         return self.get_response(request)
 
     async def __acall__(self, request: HttpRequest) -> HttpResponseBase:
-        namespace = NamespaceDetails(request)
-        
-        if namespace != "":
-            request.namespace = namespace
-            request.has_namespace = True
+        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]     
+        if namespace_obj.has_namespace:
+            request.namespace = namespace_obj
         else:
             request.namespace = AnonymousNamespace()
-            request.has_namespace = False  # type: ignore [attr-defined]
         result = self.get_response(request)
         assert not isinstance(result, HttpResponseBase)  # type narrow
         return await result
 
 
 class AnonymousNamespace(object):
-    slug = None
-
+    value = None
     
 class NamespaceDetails:
     def __init__(self, request: HttpRequest) -> None:
         self.request = request
-        self.namespace = (self.request.session.get("namespace") or "").strip()
+        self._namespace = self.request.session.get("namespace") or ""
+        self._namespace_id = str(self.request.session.get("namespace_id")) or None
 
-    def __str__(self) -> Optional[str]:
-        return self.namespace
+    def __repr__(self) -> Optional[str]:
+        return f"<Namespace {self._namespace}>"
+
+    def __str__(self) -> str:
+        return self._namespace
     
     @cached_property
+    def value(self) -> str:
+        return str(self._namespace)
+    
+    @cached_property
+    def id(self) -> str:
+        return self._namespace_id
+
+    @cached_property
     def has_namespace(self) -> bool:
-        return self.namespace != ""
+        return self._namespace != ""

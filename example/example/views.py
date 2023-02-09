@@ -4,7 +4,7 @@ import django_namespaces
 
 
 def namespace_view(request):
-    if not request.has_namespace:
+    if not request.namespace.value:
         return HttpResponse("No namespace is set")
     return HttpResponse(f"{request.namespace}")
 

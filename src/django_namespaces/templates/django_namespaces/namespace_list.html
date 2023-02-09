@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h1>Namespace List</h1>
+<div>
+    <a href="{% url 'django_namespaces:create' %}">Create a new namespace</a>
+</div>
+<ul>
+    {% for object in object_list %}
+        <div style="margin-bottom:1rem;">
+            <b><a href="{{ object.get_absolute_url }}">View {{ object.namespace }}</a></b>
+        
+            {% if request.namespace.value != object.namespace %}
+            <form action="{{ object.get_activation_url }}" method="POST">{% csrf_token %}<button href=>Activate</button></form>
+            {% endif %}
+        </div>
+        
+    {% endfor %}
+</ul>
+
+{% endblock content %}
