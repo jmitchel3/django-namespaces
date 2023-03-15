@@ -5,7 +5,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
 import django_namespaces
-from django_namespaces import utils
+from django_namespaces import resolvers
 from django_namespaces.conf import settings
 from django_namespaces.import_utils import import_module_from_str
 
@@ -40,6 +40,10 @@ class NamespaceCreateView(LoginRequiredMixin, SuccessMessageMixin,CreateView):
                 return ["django_namespaces/snippets/namespace_create.html"]
         return ["django_namespaces/namespace_create.html"]
 
+    def get_success_url(self):
+        utils.set_user_cached_namespaces(self.request.user)
+        return super().get_success_url()
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -52,8 +56,6 @@ class NamespaceDetailUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.object.namespace == self.request.namespace, self.object.namespace, self.request.namespace)
-        print(type(self.object.namespace), type(self.request.namespace))
         context["activated"] = self.object.namespace == self.request.namespace
         return context
 
@@ -73,7 +75,7 @@ class NamespaceDeleteConfirmationView(LoginRequiredMixin, DeleteView):
     success_message = "%(namespace)s was deleted successfully."
 
     def get_success_url(self):
-        return utils.reverse("django_namespaces:list")
+        return resolvers.reverse("django_namespaces:list")
 
     def get_template_names(self):
         request = self.request
@@ -102,7 +104,7 @@ def namespace_activation_view(request, slug=None):
 
 
 def clear_namespaces_view(request):
-    namespace_list_view = utils.reverse("django_namespaces:list")
+    namespace_list_view = resolvers.reverse("django_namespaces:list")
     if request.method == "POST":
         django_namespaces.clear(request)
         return HttpResponseRedirect(namespace_list_view)

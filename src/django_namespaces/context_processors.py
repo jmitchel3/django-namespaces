@@ -1,14 +1,9 @@
-from django.contrib import admin
-
-from django_namespaces.conf import settings as django_namespaces_settings
-from django_namespaces.import_utils import import_module_from_str
-
-Namespace = import_module_from_str(django_namespaces_settings.DJANGO_NAMESPACE_MODEL)
+from django_namespaces import utils
 
 
 def user_namespaces(request):
     if request.user.is_authenticated:
         return {
-            "user_namespaces": Namespace.objects.filter(user=request.user)
+            "user_namespaces": get_or_set_cached_user_namespaces(request.user)
         }
     return {}

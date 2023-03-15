@@ -1,13 +1,24 @@
+from django.core.cache import cache
+
 from django_namespaces.conf import settings
-from django_namespaces.conf import settings as django_namespace_settings
+from django_namespaces.conf import settings as django_namespaces_settings
 from django_namespaces.import_utils import import_module_from_str
 
+CACHE_SECONDS = import_module_from_str(django_namespaces_settings.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS)
+CACHE_KEY_PREFIX = import_module_from_str(django_namespaces_settings.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX)
 
-def reverse(*args, **kwargs):
-    """
-    Reverse a URL using the configured URL reverse function
-    Defaults to django.urls.reverse
-    Designed to be changed to django_hosts.reverse if needed
-    """
-    reverse = import_module_from_str(settings.DJANGO_NAMESPACE_URL_REVERSE_FUNCTION)
-    return reverse(*args, **kwargs)
+
+def set_user_cached_namespaces(user):
+    NamespaceModel = import_module_from_str(django_namespaces_settings.DJANGO_NAMESPACE_MODEL)
+    user_namespaces =  NamespaceModel.objects.filter(user=user)
+    cache.set(cache_key, user_namespaces, CACHE_SECONDS)
+    return user_namespaces
+
+def get_or_set_cached_user_namespaces(user):
+    cache_key = f"{CACHE_KEY_PREFIX}_{user.id}"
+    cached_user_namespaces = cache.get(cache_key)
+    if cached_user_namespaces:
+        return cached_user_namespaces
+    return set_user_cached_namespaces(user)
+
+

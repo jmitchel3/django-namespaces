@@ -26,11 +26,11 @@ $(venv) django-admin startproject cfehome .
 ```
 
 ### Installed Apps
-Add `namespaces` to your `INSTALLED_APPS` in `settings.py`:
+Add `django_namespaces` to your `INSTALLED_APPS` in `settings.py`:
 ```python
 INSTALLED_APPS = [
     ...
-    'namespaces',
+    'django_namespaces',
 ]
 ```
 
@@ -39,7 +39,7 @@ Update `MIDDLEWARE` in `settings.py` to include `NamespaceMiddleware`:
 ```python
 MIDDLEWARE = [
     ...
-    'namespaces.middleware.NamespaceMiddleware',
+    'django_namespaces.middleware.NamespaceMiddleware',
 ]
 ```
 
@@ -50,8 +50,8 @@ This gives us access to the `request.namespace` object in our views.
 ## Basic Usage
 
 ```python
-import django_namespace
-django_namespace.activate("hello-world")
+import django_namespaces
+django_namespaces.activate("hello-world")
 ```
 This will add a namespace to the request object.
 
@@ -65,27 +65,23 @@ def my_hello_world_view(request):
 
 
 ### Optional Views
+Using views are optional. You can also use the `activate` function to activate a namespace.
 
-
-### Update URLconf
+#### Update URLconf
 Update `urls.py` to include `namespaces.urls`:
 ```python
 urlpatterns = [
     ...
-    path('namespaces/', include('namespaces.urls')),
+    path('namespaces/', include('django_namespaces.urls')),
 ]
 ```
 
-This gives us access to the `namespaces/` namespace.
 
-
-
-
-### Create a Namespace
+#### Create a Namespace
 Create a namespace by visiting `http://localhost:8000/namespaces/create/` and filling out the form.
 
 
-### Activate a Namespace
+#### Activate a Namespace
 Activate a namespace by visiting `http://localhost:8000/namespaces/` and hitting `activate` on your newly created namespace.
 
 You can also use:
