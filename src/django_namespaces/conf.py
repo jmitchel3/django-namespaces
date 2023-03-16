@@ -35,14 +35,14 @@ class Settings:
         """
         The form to use for creating a namespace 
         """
-        return getattr(django_settings, "DEFAULT_NAMESPACE_MODEL", "django_namespaces.forms.NamespaceCreateForm")
+        return getattr(django_settings, "DJANGO_NAMESPACE_CREATE_FORM", "django_namespaces.forms.NamespaceCreateForm")
 
     @property
     def DJANGO_NAMESPACE_UPDATE_FORM(self) -> str:
         """
         The form to use for updating a namespace
         """
-        return getattr(django_settings, "DEFAULT_NAMESPACE_MODEL", "django_namespaces.forms.NamespaceUpdateForm")
+        return getattr(django_settings, "DJANGO_NAMESPACE_UPDATE_FORM", "django_namespaces.forms.NamespaceUpdateForm")
 
     @property
     def DJANGO_NAMESPACE_URL_REVERSE_FUNCTION(self) -> str:
