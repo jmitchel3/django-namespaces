@@ -63,4 +63,4 @@ scripts:
   push:
     - rm -rf dist/ || true
     - venv/bin/python setup.py sdist bdist_wheel
-    - venv/bin/twine upload dist/*
+    - venv/bin/twine upload dist/* 

@@ -8,14 +8,14 @@ Namespace = import_module_from_str(settings.DJANGO_NAMESPACE_MODEL)
 
 
 class NamespaceCreateForm(forms.ModelForm):
-    slug = forms.SlugField(label='Namespace', help_text="Namespaces must be unique and can be changed later.")
+    handle = forms.SlugField(label='Namespace', help_text="Namespaces must be unique and can be changed later.")
     class Meta:
         model = Namespace
-        fields = ["slug"]
+        fields = ["handle"]
 
 
 class NamespaceUpdateForm(forms.ModelForm):
-    slug = forms.SlugField(label='Namespace', help_text="Namespaces must be unique and can be changed later.")
+    handle = forms.SlugField(label='Namespace', help_text="Namespaces must be unique and can be changed later.")
     class Meta:
         model = Namespace
-        fields = ["title", "slug", "description"]
+        fields = ["title", "handle", "description"]

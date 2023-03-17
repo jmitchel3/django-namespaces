@@ -7,9 +7,9 @@ Namespace = import_module_from_str(settings.DJANGO_NAMESPACE_MODEL)
 
 
 class NamespaceAdmin(admin.ModelAdmin):
-    list_display = ["slug", "title", "user", "modified"]
+    list_display = ["handle", "title", "user", "modified"]
     list_filter = ["created_at", "updated_at"]
-    search_fields = ["slug", "title", "user__username"]
+    search_fields = ["handle", "title", "user__username"]
 
     class Meta:
         model = Namespace

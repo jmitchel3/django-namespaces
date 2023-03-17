@@ -24,11 +24,18 @@ class Settings:
         return getattr(django_settings, "DJANGO_NAMESPACE_BLOCKED_LIST", "django_namespaces.blocked.blocked_namespaces")
     
     @property
-    def DJANGO_NAMESPACE_MAX_SLUG_LENGTH(self) -> str:
+    def DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE(self) -> str:
         """
-        The max length of a namespace slug
+        The template to use when a namespace is not activated
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_MAX_SLUG_LENGTH", 50)
+        return getattr(django_settings, "DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE", "django_namespaces/namespace_needs_activation.html")
+
+    @property
+    def DJANGO_NAMESPACE_MAX_HANDLE_LENGTH(self) -> str:
+        """
+        The max length of a namespace handle
+        """
+        return getattr(django_settings, "DJANGO_NAMESPACE_MAX_HANDLE_LENGTH", 50)
 
     @property
     def DJANGO_NAMESPACE_CREATE_FORM(self) -> str:
