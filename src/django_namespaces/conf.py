@@ -9,26 +9,39 @@ class Settings:
     """
     Shadow Django's settings with a little logic
     """
+
     @property
     def DJANGO_NAMESPACE_MODEL(self) -> str:
         """
         Tge default model to use for namespaces
         """
-        return getattr(django_settings, "DEFAULT_NAMESPACE_MODEL", "django_namespaces.models.Namespace")
-    
+        return getattr(
+            django_settings,
+            "DEFAULT_NAMESPACE_MODEL",
+            "django_namespaces.models.Namespace",
+        )
+
     @property
     def DJANGO_NAMESPACE_BLOCKED_LIST(self) -> int:
         """
         A list of namespaces that are not allowed to be created
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_BLOCKED_LIST", "django_namespaces.blocked.blocked_namespaces")
-    
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_BLOCKED_LIST",
+            "django_namespaces.blocked.blocked_namespaces",
+        )
+
     @property
     def DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE(self) -> str:
         """
         The template to use when a namespace is not activated
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE", "django_namespaces/namespace_needs_activation.html")
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE",
+            "django_namespaces/namespace_needs_activation.html",
+        )
 
     @property
     def DJANGO_NAMESPACE_MAX_HANDLE_LENGTH(self) -> str:
@@ -40,24 +53,36 @@ class Settings:
     @property
     def DJANGO_NAMESPACE_CREATE_FORM(self) -> str:
         """
-        The form to use for creating a namespace 
+        The form to use for creating a namespace
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_CREATE_FORM", "django_namespaces.forms.NamespaceCreateForm")
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_CREATE_FORM",
+            "django_namespaces.forms.NamespaceCreateForm",
+        )
 
     @property
     def DJANGO_NAMESPACE_UPDATE_FORM(self) -> str:
         """
         The form to use for updating a namespace
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_UPDATE_FORM", "django_namespaces.forms.NamespaceUpdateForm")
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_UPDATE_FORM",
+            "django_namespaces.forms.NamespaceUpdateForm",
+        )
 
     @property
     def DJANGO_NAMESPACE_URL_REVERSE_FUNCTION(self) -> str:
         """
         The function to use for reversing urls
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_URL_REVERSE_FUNCTION", "django.urls.reverse")
-    
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_URL_REVERSE_FUNCTION",
+            "django.urls.reverse",
+        )
+
     @property
     def DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL(self) -> str:
         """
@@ -71,14 +96,21 @@ class Settings:
         Duration to cache the context processor in Seconds
         Default is 1 hour
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS", 3600)
-    
+        return getattr(
+            django_settings, "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS", 3600
+        )
+
     @property
     def DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX(self) -> str:
         """
         The prefix to use for the cache key for the context processor
         """
-        return getattr(django_settings, "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX", "django_ns_cp_")
+        return getattr(
+            django_settings,
+            "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX",
+            "django_ns_cp_",
+        )
+
 
 @lru_cache
 def get_settings() -> Settings:

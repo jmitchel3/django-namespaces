@@ -5,8 +5,7 @@ Use namespaces in requests using Django.
 
 ## Motivation
 
-Google Cloud has an interest feature for namespacing projects. Namespacing can enable assets to be isolated from each other without needing to leverage subdomains and/or multiple databases (although you can use those too).
-
+With _django-namespaces_, we get a new way to group resources based on `request.namespace`. 
 
 ## Installation
 
@@ -50,19 +49,36 @@ This gives us access to the `request.namespace` object in our views.
 ## Basic Usage
 
 ```python
+from django.contrib.auth import get_user_model
+from django_namespaces.models import Namespace
+
+User = get_user_model()
+user = User.objects.create_user(username="jon.snow", password="youknowsomething")
+
+namespace = Namespace.objects.create(handle="winterfell", user=user)
+namespace2 = Namespace.objects.create(handle="thewall", user=user)
+```
+
+```python
 import django_namespaces
-django_namespaces.activate("hello-world")
+django_namespaces.activate("winterfell")
 ```
 This will add a namespace to the request object.
 
 ```python
 
 def my_hello_world_view(request):
-    print(request.namespace) # <Namespace: hello-world>
-    print(request.namespace.value) # hello-world
+    print(request.namespace) # <Namespace: winterfell>
+    print(request.namespace.handle) # winterfell
     return HttpResponse("Hello World") 
 ```
 
+```python
+
+class Location(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    namespace = models.ForeignKey(Namespace, on_delete=models.CASCADE)
+```
 
 ### Optional Views
 Using views are optional. You can also use the `activate` function to activate a namespace.

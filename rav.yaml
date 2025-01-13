@@ -2,11 +2,11 @@ scripts:
   install:
     - venv/bin/python3 -m pip install -e .
   sample_server:
-    - cd example && ../venv/bin/python manage.py runserver 8133
+    - cd sample_project && ../venv/bin/python manage.py runserver 8133
   sample_shell:
-    - cd example && ../venv/bin/python manage.py shell
+    - cd sample_project && ../venv/bin/python manage.py shell
   bump:
     - venv/bin/bump2version patch
   makemigrations:
-    - cd example && ../venv/bin/python manage.py makemigrations
+    - cd sample_project && ../venv/bin/python manage.py makemigrations
     - ../venv/bin/python manage.py migrate
