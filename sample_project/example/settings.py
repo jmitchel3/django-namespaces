@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from __future__ import annotations
 
 from pathlib import Path
 
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     "django_namespaces.middleware.NamespaceMiddleware",
 ]
 
-# DJANGO_NAMESPACE_BLOCKED_LIST = 'example.blocked.blocked_namespaces'
+# DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION = 'example.blocked.blocked_namespaces'
 
 ROOT_URLCONF = "example.urls"
 
@@ -66,7 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django_namespaces.context_processors.user_namespaces_ctx"
+                "django_namespaces.context_processors.user_namespaces_ctx",
             ],
         },
     },
