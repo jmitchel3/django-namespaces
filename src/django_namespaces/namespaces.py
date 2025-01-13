@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import logging
+
+from django.http import HttpRequest
 
 logger = logging.getLogger(__name__)
 
 
-def activate(request, namespace=None, namespace_id=None):
+def activate(
+    request: HttpRequest, namespace: str | None = None, namespace_id: str | None = None
+) -> None:
     """
     Activate a namespace
     """
@@ -19,7 +25,7 @@ def activate(request, namespace=None, namespace_id=None):
     return
 
 
-def clear(request):
+def clear(request: HttpRequest) -> None:
     """
     Clear the namespace from the request object and session
     """
