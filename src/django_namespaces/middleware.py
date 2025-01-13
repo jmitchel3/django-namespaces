@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-import json
-from typing import Any, Awaitable, Callable, Optional
-from urllib.parse import unquote, urlsplit, urlunsplit
+from typing import Awaitable, Callable, Optional
 
 from django.http import HttpRequest
 from django.http.response import HttpResponseBase
@@ -37,7 +35,7 @@ class NamespaceMiddleware:
     ) -> HttpResponseBase | Awaitable[HttpResponseBase]:
         if self._is_coroutine:
             return self.__acall__(request)
-        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]     
+        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]
         if namespace_obj.has_namespace:
             request.namespace = namespace_obj
         else:
@@ -45,7 +43,7 @@ class NamespaceMiddleware:
         return self.get_response(request)
 
     async def __acall__(self, request: HttpRequest) -> HttpResponseBase:
-        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]     
+        namespace_obj = NamespaceDetails(request)  # type: ignore [attr-defined]
         if namespace_obj.has_namespace:
             request.namespace = namespace_obj
         else:
@@ -57,7 +55,9 @@ class NamespaceMiddleware:
 
 class AnonymousNamespace(object):
     value = None
-    
+    handle = None
+
+
 class NamespaceDetails:
     def __init__(self, request: HttpRequest) -> None:
         self.request = request
@@ -69,11 +69,15 @@ class NamespaceDetails:
 
     def __str__(self) -> str:
         return self._namespace
-    
+
     @cached_property
     def value(self) -> str:
         return str(self._namespace)
-    
+
+    @cached_property
+    def handle(self) -> str:
+        return str(self._namespace)
+
     @cached_property
     def id(self) -> str:
         return self._namespace_id

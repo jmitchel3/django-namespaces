@@ -10,7 +10,6 @@ on:
       - '.github/workflows/**'
       - 'src/**'
       - 'tests/**'
-      - 'example/**'
       - 'sample_project/**'
       - 'setup.py'
       - 'pyproject.toml'

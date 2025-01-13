@@ -1,9 +1,8 @@
-
 import importlib
 
 
 def import_module_from_str(string_path):
-    paths = string_path.split('.')
+    paths = string_path.split(".")
     if len(paths) == 3:
         module = importlib.import_module(f"{paths[0]}.{paths[1]}")
         return getattr(module, paths[2])

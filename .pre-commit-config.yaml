@@ -35,7 +35,7 @@ repos:
     args:
     - --py37-plus
     - --application-directories
-    - .:example:src
+    - .:sample_project:src
     - --add-import
     - 'from __future__ import annotations'
 - repo: https://github.com/PyCQA/flake8
@@ -54,3 +54,13 @@ repos:
     additional_dependencies:
     - django-stubs==1.13.0
     - types-python-dateutil
+- repo: local
+  hooks:
+  - id: makemigrations
+    name: Run makemigrations on sample_project
+    entry: bash -c 'source venv/bin/activate && cd sample_project && python manage.py makemigrations --check --dry-run'
+    language: system
+    pass_filenames: false
+    always_run: true
+    require_serial: true
+    deps: ['install-locally']

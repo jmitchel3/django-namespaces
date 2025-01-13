@@ -1,10 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    ListView,
+    UpdateView,
+)
 
 import django_namespaces
 from django_namespaces import resolvers, utils
@@ -21,7 +25,7 @@ class NamespaceListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
-    
+
     def get_template_names(self):
         request = self.request
         if hasattr(request, "htmx"):
@@ -30,7 +34,7 @@ class NamespaceListView(LoginRequiredMixin, ListView):
         return ["django_namespaces/namespace_list.html"]
 
 
-class NamespaceCreateView(LoginRequiredMixin, SuccessMessageMixin,CreateView):
+class NamespaceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Namespace
     form_class = NamespaceCreateForm
     success_message = "%(handle)s was created successfully."
@@ -91,10 +95,9 @@ class NamespaceDeleteConfirmationView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user)
-    
+
     def get_object(self):
         return get_object_or_404(self.get_queryset(), handle=self.kwargs.get("handle"))
-
 
 
 def namespace_activation_view(request, handle=None):
@@ -104,7 +107,9 @@ def namespace_activation_view(request, handle=None):
         return HttpResponse("Invalid namespace")
     except Namespace.MultipleObjectsReturned:
         return HttpResponse("Invalid namespace")
-    django_namespaces.activate(request, namespace=obj.namespace, namespace_id=str(obj.id))
+    django_namespaces.activate(
+        request, namespace=obj.namespace, namespace_id=str(obj.id)
+    )
     if hasattr(request, "htmx"):
         if request.htmx:
             return HttpResponse("OK")
@@ -116,7 +121,6 @@ def clear_namespaces_view(request):
     namespace_list_view = resolvers.reverse("django_namespaces:list")
     if request.method == "POST":
         django_namespaces.clear(request)
-        messages.success(request, f"All namespaces deactivated.")
+        messages.success(request, "All namespaces deactivated.")
         return HttpResponseRedirect(namespace_list_view)
     return HttpResponseRedirect(namespace_list_view)
-    
