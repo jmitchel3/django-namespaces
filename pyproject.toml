@@ -1,20 +1,61 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.black]
-target-version = ['py37']
+[project]
+name = "django-namespaces"
+version = "0.0.19"
+description = "Add namespaces to your Django requests. Helps with project isolation."
+readme = "README.md"
+authors = [
+  { name = "Justin Mitchel", email = "justin@codingforentrepreneurs.com" },
+]
+license = { text = "MIT" }
+keywords = ["Django"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+  "Framework :: Django :: 5.1",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+requires-python = ">=3.10"
+dependencies = [
+  "django>=4.2",
+  "qstash>=2",
+  "requests>=2.30",
+]
+urls.Changelog = "https://github.com/jmitchel3/django-namespaces"
+urls.Documentation = "https://github.com/jmitchel3/django-namespaces"
+urls.Funding = "https://github.com/jmitchel3/django-namespaces"
+urls.Repository = "https://github.com/jmitchel3/django-namespaces"
+urls.Twitter = "https://twitter.com/justinmitchel"
+urls.X = "https://x.com/justinmitchel"
 
-[tool.mypy]
-mypy_path = "src/"
-namespace_packages = false
-show_error_codes = true
-strict = true
-warn_unreachable = true
 
-[[tool.mypy.overrides]]
-module = "tests.*"
-allow_untyped_defs = true
+[tool.isort]
+add_imports = [
+  "from __future__ import annotations",
+]
+force_single_line = true
+profile = "black"
+src_paths = [
+  ".",
+  "example",
+  "src",
+]
+
+[tool.pyproject-fmt]
+max_supported_python = "3.13"
 
 [tool.pytest.ini_options]
 addopts = """\
@@ -23,3 +64,47 @@ addopts = """\
     --ds=tests.settings
     """
 django_find_project = false
+xfail_strict = true
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = [
+  "django_namespaces",
+]
+omit = [
+  "*/migrations/*",
+  "*/admin.py",
+  "tests/*",
+]
+
+[tool.coverage.paths]
+source = [
+  "src/django_namespaces",
+  ".tox/*/lib/python*/site-packages/django_namespaces",
+]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.mypy]
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+]
+mypy_path = "src/"
+namespace_packages = false
+strict = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.rstcheck]
+ignore_directives = [
+  "autoclass",
+  "autofunction",
+]
+report_level = "ERROR"

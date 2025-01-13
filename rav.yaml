@@ -1,66 +1,12 @@
 scripts:
-  create_venvs:
-    - python3.11 -m venv venv-py311
-    - python3.10 -m venv venv-py310
-    - python3.9 -m venv venv-py39
-    - python3.8 -m venv venv-py38
-    - python3.7 -m venv venv-py37
-  
-  install_pip_tools:
-    - venv/bin/python -m pip install pip-tools pip --upgrade
-    - venv-py311/bin/python -m pip install pip-tools pip --upgrade
-    - venv-py310/bin/python -m pip install pip-tools pip --upgrade
-    - venv-py39/bin/python -m pip install pip-tools pip --upgrade
-    - venv-py38/bin/python -m pip install pip-tools pip --upgrade
-    - venv-py37/bin/python -m pip install pip-tools pip --upgrade
-
-  compile_django41:
-    - venv/bin/python -m piptools compile --output-file requirements/requirements.txt --upgrade requirements/requirements-41.in
-    - venv-py311/bin/python -m piptools compile --output-file requirements/py311-django41.txt --upgrade requirements/requirements-41.in
-    - venv-py310/bin/python -m piptools compile --output-file requirements/py310-django41.txt --upgrade requirements/requirements-41.in
-    - venv-py39/bin/python -m piptools compile --output-file requirements/py39-django41.txt --upgrade requirements/requirements-41.in
-    - venv-py38/bin/python -m piptools compile --output-file requirements/py38-django41.txt --upgrade requirements/requirements-41.in
-
-  compile_django40:
-    - venv-py311/bin/python -m piptools compile --output-file requirements/py311-django40.txt --upgrade requirements/requirements-40.in
-    - venv-py310/bin/python -m piptools compile --output-file requirements/py310-django40.txt --upgrade requirements/requirements-40.in
-    - venv-py39/bin/python -m piptools compile --output-file requirements/py39-django40.txt --upgrade requirements/requirements-40.in
-    - venv-py38/bin/python -m piptools compile --output-file requirements/py38-django40.txt --upgrade requirements/requirements-40.in
-  
-  compile_django32:
-    - venv-py311/bin/python -m piptools compile --output-file requirements/py311-django32.txt --upgrade requirements/requirements-32.in
-    - venv-py310/bin/python -m piptools compile --output-file requirements/py310-django32.txt --upgrade requirements/requirements-32.in
-    - venv-py39/bin/python -m piptools compile --output-file requirements/py39-django32.txt --upgrade requirements/requirements-32.in
-    - venv-py38/bin/python -m piptools compile --output-file requirements/py38-django32.txt --upgrade requirements/requirements-32.in
-    - venv-py37/bin/python -m piptools compile --output-file requirements/py37-django32.txt --upgrade requirements/requirements-32.in
-
-  pip-compile: 
-    - rav run compile_django41
-    - rav run compile_django40
-    - rav run compile_django32
-
-  venv-pip-install:
-    - venv/bin/python -m pip install -r requirements/py311-django41.txt
-
-  example_user:
-    - venv/bin/python example/manage.py migrate
-    - DJANGO_SUPERUSER_PASSWORD=admin venv/bin/python example/manage.py createsuperuser --noinput --username admin --email admin@admin.com || true
-
-  migrations:
-    - venv/bin/python example/manage.py makemigrations django_namespaces
-    - venv/bin/python example/manage.py migrate
-
   install:
-    - venv/bin/python -m pip uninstall django-namespaces -y
-    - venv/bin/python -m pip install -e . --upgrade --no-cache-dir
-    - venv/bin/python example/manage.py makemigrations django_namespaces
-    - venv/bin/python example/manage.py migrate
-  
-  check:
-    - venv/bin/python setup.py sdist bdist_wheel
-    - venv/bin/twine check dist/*
-
-  push:
-    - rm -rf dist/ || true
-    - venv/bin/python setup.py sdist bdist_wheel
-    - venv/bin/twine upload dist/* 
+    - venv/bin/python3 -m pip install -e .
+  sample_server:
+    - cd example && ../venv/bin/python manage.py runserver 8133
+  sample_shell:
+    - cd example && ../venv/bin/python manage.py shell
+  bump:
+    - venv/bin/bump2version patch
+  makemigrations:
+    - cd example && ../venv/bin/python manage.py makemigrations
+    - ../venv/bin/python manage.py migrate
