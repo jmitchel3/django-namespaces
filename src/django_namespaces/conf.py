@@ -22,13 +22,14 @@ class Settings:
         )
 
     @property
-    def DJANGO_NAMESPACE_BLOCKED_LIST(self) -> int:
+    def DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION(self) -> str:
         """
-        A list of namespaces that are not allowed to be created
+        Dot notation for the location of the list of namespaces
+        that are not allowed to be created.
         """
         return getattr(
             django_settings,
-            "DJANGO_NAMESPACE_BLOCKED_LIST",
+            "DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION",
             "django_namespaces.blocked.blocked_namespaces",
         )
 
@@ -44,7 +45,7 @@ class Settings:
         )
 
     @property
-    def DJANGO_NAMESPACE_MAX_HANDLE_LENGTH(self) -> str:
+    def DJANGO_NAMESPACE_MAX_HANDLE_LENGTH(self) -> int:
         """
         The max length of a namespace handle
         """
