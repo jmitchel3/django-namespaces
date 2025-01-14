@@ -5,7 +5,7 @@ Use namespaces in requests using Django.
 
 ## Motivation
 
-With _django-namespaces_, we get a new way to group resources based on `request.namespace`. 
+With _django-namespaces_, we get a new way to group resources based on `request.namespace`.
 
 ## Installation
 
@@ -28,23 +28,22 @@ $(venv) django-admin startproject cfehome .
 Add `django_namespaces` to your `INSTALLED_APPS` in `settings.py`:
 ```python
 INSTALLED_APPS = [
-    ...
-    'django_namespaces',
+    # ...
+    "django_namespaces",
 ]
 ```
 
 ### Update Middelware
 Update `MIDDLEWARE` in `settings.py` to include `NamespaceMiddleware`:
+
 ```python
 MIDDLEWARE = [
-    ...
-    'django_namespaces.middleware.NamespaceMiddleware',
+    # ...
+    "django_namespaces.middleware.NamespaceMiddleware",
 ]
 ```
 
-
 This gives us access to the `request.namespace` object in our views.
-
 
 ## Basic Usage
 
@@ -61,19 +60,22 @@ namespace2 = Namespace.objects.create(handle="thewall", user=user)
 
 ```python
 import django_namespaces
+
 django_namespaces.activate("winterfell")
 ```
 This will add a namespace to the request object.
 
 ```python
-
 def my_hello_world_view(request):
-    print(request.namespace) # <Namespace: winterfell>
-    print(request.namespace.handle) # winterfell
-    return HttpResponse("Hello World") 
+    print(request.namespace)  # <Namespace: winterfell>
+    print(request.namespace.handle)  # winterfell
+    return HttpResponse("Hello World")
 ```
 
 ```python
+from django.db import models
+from django_namespaces.models import Namespace
+
 
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -87,8 +89,8 @@ Using views are optional. You can also use the `activate` function to activate a
 Update `urls.py` to include `namespaces.urls`:
 ```python
 urlpatterns = [
-    ...
-    path('namespaces/', include('django_namespaces.urls')),
+    # ...
+    path("namespaces/", include("django_namespaces.urls")),
 ]
 ```
 
@@ -104,5 +106,3 @@ You can also use:
 
 
 #### Update URLconf
-
-
