@@ -16,16 +16,12 @@ source venv/bin/activate
 $(venv) python -m pip install django-namespaces --upgrade
 ```
 
-## Configure your Django Project
+### Django Settings (`settings.py`)
 
-### Create a Django Project
-```
-$(venv) mkdir -p src && cd src
-$(venv) django-admin startproject cfehome .
-```
 
 ### Installed Apps
-Add `django_namespaces` to your `INSTALLED_APPS` in `settings.py`:
+
+Add `django_namespaces` to `INSTALLED_APPS`:
 ```python
 INSTALLED_APPS = [
     # ...
@@ -33,8 +29,9 @@ INSTALLED_APPS = [
 ]
 ```
 
-### Update Middelware
-Update `MIDDLEWARE` in `settings.py` to include `NamespaceMiddleware`:
+### Middleware
+
+Update `MIDDLEWARE`:
 
 ```python
 MIDDLEWARE = [
@@ -45,7 +42,18 @@ MIDDLEWARE = [
 
 This gives us access to the `request.namespace` object in our views.
 
-## Basic Usage
+### Template Context Processors
+
+Add `django_namespaces.context_processors.user_namespaces` to `TEMPLATE_CONTEXT_PROCESSORS`:
+
+```python
+TEMPLATE_CONTEXT_PROCESSORS = [
+    # ...
+    "django_namespaces.context_processors.user_namespaces",
+]
+```
+
+## Usage Usage
 
 ```python
 from django.contrib.auth import get_user_model

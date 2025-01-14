@@ -11,7 +11,11 @@ from django_namespaces import validators
 from django_namespaces.conf import settings as django_namespace_settings
 
 
-class Namespace(models.Model):
+class AbstractNamespace(models.Model):
+    """
+    Abstract base class for all namespace models.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     handle = models.SlugField(
@@ -28,14 +32,8 @@ class Namespace(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.default:
-            Namespace.objects.exclude(id=self.id).filter(
-                user=self.user, default=True
-            ).update(default=False)
-
     class Meta:
+        abstract = True
         ordering = ["handle", "-updated_at", "-created_at"]
 
     def get_absolute_url(self):
@@ -73,5 +71,18 @@ class Namespace(models.Model):
         return smart_str(self.handle)
 
 
+class Namespace(AbstractNamespace):
+    """
+    Namespace model.
+    """
+
+    class Meta(AbstractNamespace.Meta):
+        abstract = False
+
+
 class AnonymousNamespace:
+    """
+    Anonymous namespace.
+    """
+
     handle = None
