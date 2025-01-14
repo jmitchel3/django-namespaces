@@ -8,7 +8,7 @@ from django.test import RequestFactory
 from django.test import TestCase
 
 from django_namespaces import context_processors
-from django_namespaces import utils
+from django_namespaces import services
 
 
 class ContextProcessorsTestCase(TestCase):
@@ -27,7 +27,7 @@ class ContextProcessorsTestCase(TestCase):
         # Mock the cache function to return test data
         test_namespaces = ["namespace1", "namespace2"]
         with unittest.mock.patch.object(
-            utils, "get_or_set_cached_user_namespaces", return_value=test_namespaces
+            services, "get_namespaces", return_value=test_namespaces
         ):
             context = context_processors.user_namespaces(request)
 

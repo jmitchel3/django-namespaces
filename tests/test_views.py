@@ -5,6 +5,7 @@ from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
 
+from django_namespaces.conf import settings
 from django_namespaces.models import Namespace
 
 User = get_user_model()
@@ -109,11 +110,16 @@ class NamespaceViewsTest(TestCase):
     def test_htmx_templates(self):
         # Test create view with HTMX request
         response = self.client.get(
-            reverse("django_namespaces:create"), HTTP_HX_REQUEST="true"
+            reverse("django_namespaces:create"),
+            HTTP_HX_REQUEST="true",
         )
         self.assertTemplateUsed(
             response, "django_namespaces/snippets/namespace_create.html"
         )
+
+        # Add test for non-HTMX request
+        response = self.client.get(reverse("django_namespaces:create"))
+        self.assertTemplateUsed(response, "django_namespaces/namespace_create.html")
 
         # Test update view with HTMX request
         response = self.client.get(
@@ -264,11 +270,25 @@ class NamespaceViewsTest(TestCase):
             "django_namespaces:activate", kwargs={"handle": self.namespace.handle}
         )
 
-        # Test HTMX request - should still redirect
+        # Test HTMX request
         response = self.client.get(url, HTTP_HX_REQUEST="true")
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode(), "OK")
 
         # Test regular request with success message
         response = self.client.get(url, follow=True)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), f"{self.namespace.handle} activated.")
+        self.assertEqual(
+            response.redirect_chain[0][0],
+            settings.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL,
+        )
+
+    def test_namespace_detail_context(self):
+        url = reverse(
+            "django_namespaces:detail-update",
+            kwargs={"handle": self.namespace.handle},
+        )
+        response = self.client.get(url)
+        self.assertIn("activated", response.context)
+        self.assertIsInstance(response.context["activated"], bool)

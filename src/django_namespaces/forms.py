@@ -1,9 +1,20 @@
+from __future__ import annotations
+
+import swapper
 from django import forms
 
 from django_namespaces.conf import settings
-from django_namespaces.import_utils import import_module_from_str
 
-Namespace = import_module_from_str(settings.DJANGO_NAMESPACE_MODEL)
+Namespace = swapper.load_model("django_namespaces", "Namespace")
+
+
+def get_fields():
+    from django_namespaces.models import Namespace as _Namespace
+
+    if Namespace == _Namespace:
+        return ["title", "handle", "description"]
+    else:
+        return settings.DJANGO_NAMESPACE_FIELDS
 
 
 class NamespaceCreateForm(forms.ModelForm):
@@ -25,4 +36,4 @@ class NamespaceUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Namespace
-        fields = ["title", "handle", "description"]
+        fields = get_fields()

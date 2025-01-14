@@ -40,9 +40,9 @@ class SettingsTests(TestCase):
         )
         self.assertEqual(s.DJANGO_NAMESPACE_URL_REVERSE_FUNCTION, "django.urls.reverse")
         self.assertEqual(s.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL, "/")
-        self.assertEqual(s.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS, 3600)
+        self.assertEqual(s.DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS, 3600)
         self.assertEqual(
-            s.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX, "django_ns_cp_"
+            s.DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX, "dj:namespace:qs:"
         )
 
     @override_settings(
@@ -54,8 +54,8 @@ class SettingsTests(TestCase):
         DJANGO_NAMESPACE_UPDATE_FORM="custom.UpdateForm",
         DJANGO_NAMESPACE_URL_REVERSE_FUNCTION="custom.reverse",
         DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL="/custom/",
-        DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS=7200,
-        DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX="custom_prefix_",
+        DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS=7200,
+        DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX="custom_prefix_",
     )
     def test_custom_settings(self):
         """Test that custom settings override defaults"""
@@ -71,7 +71,5 @@ class SettingsTests(TestCase):
         self.assertEqual(s.DJANGO_NAMESPACE_UPDATE_FORM, "custom.UpdateForm")
         self.assertEqual(s.DJANGO_NAMESPACE_URL_REVERSE_FUNCTION, "custom.reverse")
         self.assertEqual(s.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL, "/custom/")
-        self.assertEqual(s.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS, 7200)
-        self.assertEqual(
-            s.DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX, "custom_prefix_"
-        )
+        self.assertEqual(s.DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS, 7200)
+        self.assertEqual(s.DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX, "custom_prefix_")

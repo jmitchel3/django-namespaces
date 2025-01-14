@@ -31,7 +31,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
   "django>=4.2",
-  "qstash>=2",
+  "swapper>=1.4.0",
   "requests>=2.30",
 ]
 urls.Changelog = "https://github.com/jmitchel3/django-namespaces"

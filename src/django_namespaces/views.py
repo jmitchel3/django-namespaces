@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import swapper
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -13,11 +14,11 @@ from django.views.generic import UpdateView
 
 import django_namespaces
 from django_namespaces import resolvers
-from django_namespaces import utils
+from django_namespaces import services
 from django_namespaces.conf import settings
 from django_namespaces.import_utils import import_module_from_str
 
-Namespace = import_module_from_str(settings.DJANGO_NAMESPACE_MODEL)
+Namespace = swapper.load_model("django_namespaces", "Namespace")
 NamespaceCreateForm = import_module_from_str(settings.DJANGO_NAMESPACE_CREATE_FORM)
 NamespaceUpdateForm = import_module_from_str(settings.DJANGO_NAMESPACE_UPDATE_FORM)
 
@@ -26,7 +27,7 @@ class NamespaceListView(LoginRequiredMixin, ListView):
     model = Namespace
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        return services.get_namespaces(self.request.user, use_caching=True)
 
     def get_template_names(self):
         request = self.request
@@ -49,7 +50,7 @@ class NamespaceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return ["django_namespaces/namespace_create.html"]
 
     def get_success_url(self):
-        utils.set_user_cached_namespaces(self.request.user)
+        services.get_namespaces(self.request.user, refresh_cache=True)
         return super().get_success_url()
 
     def form_valid(self, form):
@@ -74,11 +75,15 @@ class NamespaceDetailUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
                 return ["django_namespaces/snippets/namespace_update.html"]
         return ["django_namespaces/namespace_update.html"]
 
-    def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
-
     def get_object(self):
-        return get_object_or_404(self.get_queryset(), handle=self.kwargs.get("handle"))
+        return get_object_or_404(
+            self.model.objects.filter(user=self.request.user),
+            handle=self.kwargs.get("handle"),
+        )
+
+    def get_success_url(self):
+        services.get_namespaces(self.request.user, refresh_cache=True)
+        return super().get_success_url()
 
 
 class NamespaceDeleteConfirmationView(
@@ -87,10 +92,6 @@ class NamespaceDeleteConfirmationView(
     model = Namespace
     success_message = "Namespace was deleted successfully."
 
-    def get_success_url(self):
-        utils.set_user_cached_namespaces(self.request.user)
-        return resolvers.reverse("django_namespaces:list")
-
     def get_template_names(self):
         request = self.request
         if hasattr(request, "htmx"):
@@ -98,11 +99,15 @@ class NamespaceDeleteConfirmationView(
                 return ["django_namespaces/snippets/namespace_delete.html"]
         return ["django_namespaces/namespace_delete.html"]
 
-    def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
-
     def get_object(self):
-        return get_object_or_404(self.get_queryset(), handle=self.kwargs.get("handle"))
+        return get_object_or_404(
+            self.model.objects.filter(user=self.request.user),
+            handle=self.kwargs.get("handle"),
+        )
+
+    def get_success_url(self):
+        services.get_namespaces(self.request.user, refresh_cache=True)
+        return resolvers.reverse("django_namespaces:list")
 
 
 def namespace_activation_view(request, handle=None):
@@ -113,9 +118,9 @@ def namespace_activation_view(request, handle=None):
         request, namespace=namespace.namespace, namespace_id=str(namespace.id)
     )
 
-    if hasattr(request, "htmx"):
-        if request.htmx:
-            return HttpResponse("OK")
+    # Check for HTMX request header directly
+    if request.headers.get("Hx-Request") == "true":
+        return HttpResponse("OK")
 
     messages.success(request, f"{handle} activated.")
     return HttpResponseRedirect(settings.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL)

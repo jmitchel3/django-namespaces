@@ -12,6 +12,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_namespaces",
+    "tests.test_app",
 ]
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
