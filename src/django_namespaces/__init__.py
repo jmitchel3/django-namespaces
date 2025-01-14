@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-__version__ = "0.0.19"
+__version__ = "0.0.20"
 
 from django_namespaces.namespaces import activate, clear
 
