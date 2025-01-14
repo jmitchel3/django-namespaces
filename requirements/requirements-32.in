@@ -1,5 +1,0 @@
-coverage
-Django>=3.2a1,<3.3
-pytest
-pytest-django
-pytest-randomly

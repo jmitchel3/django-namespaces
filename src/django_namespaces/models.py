@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import uuid
 
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import smart_str
 
-from django_namespaces import resolvers, validators
+from django_namespaces import resolvers
+from django_namespaces import validators
 from django_namespaces.conf import settings as django_namespace_settings
 
 
@@ -41,7 +44,7 @@ class Namespace(models.Model):
         Review django_namespaces.resolvers for more
         """
         return resolvers.reverse(
-            "django_namespaces:detail-update", kwargs={"handle": self.namespace}
+            "django_namespaces:detail-update", kwargs={"handle": self.handle}
         )
 
     def get_activation_url(self):
@@ -50,7 +53,7 @@ class Namespace(models.Model):
         Review django_namespaces.resolvers for more
         """
         return resolvers.reverse(
-            "django_namespaces:activate", kwargs={"handle": self.namespace}
+            "django_namespaces:activate", kwargs={"handle": self.handle}
         )
 
     def get_delete_url(self):
@@ -59,7 +62,7 @@ class Namespace(models.Model):
         Review django_namespaces.resolvers for more
         """
         return resolvers.reverse(
-            "django_namespaces:delete", kwargs={"handle": self.namespace}
+            "django_namespaces:delete", kwargs={"handle": self.handle}
         )
 
     def __str__(self):
@@ -70,5 +73,5 @@ class Namespace(models.Model):
         return smart_str(self.handle)
 
 
-class AnonymousNamespace(object):
+class AnonymousNamespace:
     handle = None

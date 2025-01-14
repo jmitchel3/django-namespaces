@@ -1,2 +1,5 @@
 bump2version
 pre_commit
+tox
+coverage
+django-stubs[compatible-mypy]
