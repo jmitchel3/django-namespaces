@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
 from django.test import TestCase
@@ -8,24 +10,23 @@ from django.urls import reverse
 from django_namespaces.conf import settings
 from django_namespaces.models import Namespace
 
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+TESTS_DIR = PROJECT_DIR / "tests"
+FIXTURES_DIR = TESTS_DIR / "fixtures"
+NAMESPACES_FIXTURE = FIXTURES_DIR / "namespaces" / "test_namespaces.json"
+
 User = get_user_model()
 
 
 class BaseNamespaceTest(TestCase):
-    """Base test class with common setup"""
+    fixtures = [f"{NAMESPACES_FIXTURE}"]
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            username="testuser", password="testpass123"
-        )
-        Namespace.objects.all().delete()
-        self.namespace = Namespace.objects.create(
-            user=self.user,
-            handle="test-namespace",
-            title="Test Namespace",
-            description="A test namespace",
-        )
-        self.client.login(username="testuser", password="testpass123")
+        self.user = User.objects.all().first()
+        self.namespace = Namespace.objects.get(handle="winterfell")
+        self.user.set_password("testpass123")
+        self.user.save()
+        self.client.login(username="admin", password="testpass123")
 
 
 class NamespaceListViewTest(BaseNamespaceTest):
@@ -127,7 +128,7 @@ class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
         )
         self.assertEqual(response.status_code, 200)
         self.namespace.refresh_from_db()
-        self.assertEqual(self.namespace.handle, "test-namespace")
+        self.assertEqual(self.namespace.handle, "winterfell")
 
     def test_namespace_detail_context(self):
         url = reverse(
@@ -187,9 +188,7 @@ class NamespaceUnauthorizedAccessTest(BaseNamespaceTest):
             username="otheruser", password="testpass123"
         )
         self.other_namespace = Namespace.objects.create(
-            user=self.other_user,
-            handle="other-namespace",
-            title="Other Namespace",
+            handle="other-namespace", user=self.other_user
         )
 
     def test_unauthorized_access(self):
@@ -226,14 +225,8 @@ class NamespaceUnauthorizedAccessTest(BaseNamespaceTest):
 class NamespaceMessagesTest(BaseNamespaceTest):
     def setUp(self):
         super().setUp()
-        # Clear any existing namespaces to start fresh
-        Namespace.objects.all().delete()
-        self.namespace = Namespace.objects.create(
-            user=self.user,
-            handle="test-namespace",
-            title="Test Namespace",
-            description="A test namespace",
-        )
+        # Remove the manual namespace creation since it's in the fixtures
+        pass
 
     def test_create_success_message(self):
         new_handle = "message-test"

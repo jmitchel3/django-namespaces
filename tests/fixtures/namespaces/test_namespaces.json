@@ -1,0 +1,33 @@
+[
+  {
+      "model": "auth.user",
+      "pk": 1,
+      "fields": {
+          "password": "pbkdf2_sha256$870000$1PFG1bn5fWk8zNaEk4GBBt$BuBCiHN4CiZ3HegkvBmGate2/Ddph9zIlwJBPf26jrw=",
+          "last_login": null,
+          "is_superuser": true,
+          "username": "admin",
+          "first_name": "",
+          "last_name": "",
+          "email": "",
+          "is_staff": true,
+          "is_active": true,
+          "date_joined": "2025-01-14T23:27:17.677Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "django_namespaces.namespace",
+      "pk": "e7cbc96a-9ef4-4efc-99c2-eb812ee9cf2a",
+      "fields": {
+          "user": 1,
+          "handle": "winterfell",
+          "title": null,
+          "description": null,
+          "created_at": "2025-01-14T23:30:15.910Z",
+          "updated_at": "2025-01-14T23:30:15.911Z",
+          "default": true
+      }
+  }
+]

@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "projects",
 ]
 
-DJANGO_NAMESPACES_NAMESPACE_MODEL = "projects.Namespace"
+# DJANGO_NAMESPACES_NAMESPACE_MODEL = "projects.Namespace"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
