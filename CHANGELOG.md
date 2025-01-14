@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.22] - 2025-01-14
+
+### Added
+
+- Minor bug fixes
+
 ## [0.0.21] - 2025-01-14
 
 ### Added
@@ -19,4 +25,6 @@ All notable changes to this project will be documented in this file.
 
 - Old versions removed.
 
-[0.0.20]: https://github.com/jmitchel3/django-namespaces/compare/v0.0.20...HEAD
+[0.0.22]: https://github.com/jmitchel3/django-namespaces/compare/v0.0.22...HEAD
+[0.0.21]: https://github.com/jmitchel3/django-namespaces/compare/v0.0.21...v0.0.22
+[0.0.20]: https://github.com/jmitchel3/django-namespaces/compare/v0.0.20...v0.0.21
