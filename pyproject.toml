@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-namespaces"
-version = "0.0.20"
+version = "0.0.21"
 description = "Add namespaces to your Django requests. Helps with project isolation."
 readme = "README.md"
 authors = [
