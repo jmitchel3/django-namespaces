@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.21] - 2025-01-14
+
+### Added
+
+- swappable model for Namespace. Defaults to `DJANGO_NAMESPACES_NAMESPACE_MODEL="django_namespaces.Namespace"`.
+- Abstract model for Namespace.
+- Checks for Namespace model.
+- New test cases
+
 ## [0.0.20] - 2025-01-13
 
 - An updated changelog is coming soon.
