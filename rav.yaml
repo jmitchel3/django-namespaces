@@ -14,3 +14,7 @@ scripts:
     - venv/bin/tox run -f py312
     - venv/bin/coverage combine
     - venv/bin/coverage report
+  test_views:
+    - venv/bin/tox run -f py312 -- tests/test_views.py
+    - venv/bin/coverage combine
+    - venv/bin/coverage report

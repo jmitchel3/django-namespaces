@@ -21,6 +21,14 @@ User = get_user_model()
 class BaseNamespaceTest(TestCase):
     fixtures = [f"{NAMESPACES_FIXTURE}"]
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Force database to be recreated
+        from django.db import connection
+
+        connection.close()
+
     def setUp(self):
         self.user = User.objects.all().first()
         self.namespace = Namespace.objects.get(handle="winterfell")
@@ -91,10 +99,20 @@ class NamespaceCreateViewTest(BaseNamespaceTest):
 
 
 class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
+    def setUp(self):
+        super().setUp()
+        # Create a test-specific namespace for each test
+        self.test_namespace = Namespace.objects.create(
+            handle="test-namespace",
+            title="Test Title",
+            description="Test Description",
+            user=self.user,
+        )
+
     def test_namespace_detail_update_view(self):
         url = reverse(
             "django_namespaces:detail-update",
-            kwargs={"handle": self.namespace.handle},
+            kwargs={"handle": self.test_namespace.handle},
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -109,14 +127,14 @@ class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
             },
         )
         self.assertEqual(response.status_code, 302)
-        self.namespace.refresh_from_db()
-        self.assertEqual(self.namespace.handle, "updated-namespace")
-        self.assertEqual(self.namespace.title, "Updated Title")
+        self.test_namespace.refresh_from_db()
+        self.assertEqual(self.test_namespace.handle, "updated-namespace")
+        self.assertEqual(self.test_namespace.title, "Updated Title")
 
     def test_namespace_detail_update_view_invalid_data(self):
         url = reverse(
             "django_namespaces:detail-update",
-            kwargs={"handle": self.namespace.handle},
+            kwargs={"handle": self.test_namespace.handle},
         )
         response = self.client.post(
             url,
@@ -127,13 +145,13 @@ class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.namespace.refresh_from_db()
-        self.assertEqual(self.namespace.handle, "winterfell")
+        self.test_namespace.refresh_from_db()
+        self.assertEqual(self.test_namespace.handle, "test-namespace")
 
     def test_namespace_detail_context(self):
         url = reverse(
             "django_namespaces:detail-update",
-            kwargs={"handle": self.namespace.handle},
+            kwargs={"handle": self.test_namespace.handle},
         )
         response = self.client.get(url)
         self.assertIn("activated", response.context)
