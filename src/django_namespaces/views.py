@@ -1,17 +1,19 @@
+from __future__ import annotations
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView
+from django.views.generic import DeleteView
+from django.views.generic import ListView
+from django.views.generic import UpdateView
 
 import django_namespaces
-from django_namespaces import resolvers, utils
+from django_namespaces import resolvers
+from django_namespaces import utils
 from django_namespaces.conf import settings
 from django_namespaces.import_utils import import_module_from_str
 
@@ -55,7 +57,7 @@ class NamespaceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 
-class NamespaceDetailUpdateView(LoginRequiredMixin, UpdateView):
+class NamespaceDetailUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Namespace
     form_class = NamespaceUpdateForm
     success_message = "%(handle)s was updated."
@@ -79,11 +81,14 @@ class NamespaceDetailUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(self.get_queryset(), handle=self.kwargs.get("handle"))
 
 
-class NamespaceDeleteConfirmationView(LoginRequiredMixin, DeleteView):
+class NamespaceDeleteConfirmationView(
+    LoginRequiredMixin, SuccessMessageMixin, DeleteView
+):
     model = Namespace
-    success_message = "%(handle)s was deleted successfully."
+    success_message = "Namespace was deleted successfully."
 
     def get_success_url(self):
+        utils.set_user_cached_namespaces(self.request.user)
         return resolvers.reverse("django_namespaces:list")
 
     def get_template_names(self):
@@ -101,18 +106,17 @@ class NamespaceDeleteConfirmationView(LoginRequiredMixin, DeleteView):
 
 
 def namespace_activation_view(request, handle=None):
-    try:
-        obj = Namespace.objects.get(user=request.user, handle=handle)
-    except Namespace.DoesNotExist:
-        return HttpResponse("Invalid namespace")
-    except Namespace.MultipleObjectsReturned:
-        return HttpResponse("Invalid namespace")
+    # Get the namespace, returning 404 if not found or not owned by user
+    namespace = get_object_or_404(Namespace, user=request.user, handle=handle)
+
     django_namespaces.activate(
-        request, namespace=obj.namespace, namespace_id=str(obj.id)
+        request, namespace=namespace.namespace, namespace_id=str(namespace.id)
     )
+
     if hasattr(request, "htmx"):
         if request.htmx:
             return HttpResponse("OK")
+
     messages.success(request, f"{handle} activated.")
     return HttpResponseRedirect(settings.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL)
 

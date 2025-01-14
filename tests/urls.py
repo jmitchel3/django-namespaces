@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from django.http import Http404, HttpResponse
+from django.http import Http404
+from django.http import HttpResponse
+from django.urls import include
 from django.urls import path
 
 
@@ -24,4 +26,7 @@ urlpatterns = [
     path("foo/", test_view),
     path("test-401/", test_view_http401),
     path("delete-is-enabled/", test_view_that_deletes_is_enabled),
+    path(
+        "namespaces/", include("django_namespaces.urls", namespace="django_namespaces")
+    ),
 ]
