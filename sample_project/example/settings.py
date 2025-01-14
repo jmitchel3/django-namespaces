@@ -27,6 +27,7 @@ SECRET_KEY = "django-insecure-dazvlsoat!&1f5rv3j^6f8(ojk=#bn&i=cnl-d4jia@c)&sw34
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://*.desalsa.co"]
 
 
 # Application definition
@@ -39,7 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_namespaces",
+    "projects",
 ]
+
+DJANGO_NAMESPACES_NAMESPACE_MODEL = "projects.Namespace"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

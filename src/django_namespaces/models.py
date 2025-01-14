@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import uuid
 
+import swapper
 from django.conf import settings
 from django.db import models
 from django.utils.encoding import smart_str
@@ -26,11 +27,20 @@ class AbstractNamespace(models.Model):
     )
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     default = models.BooleanField(
         default=True, help_text="Default namespace for this user (only one possible)"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.default:
+            NamespaceModel = swapper.load_model("django_namespaces", "Namespace")
+            qs = NamespaceModel.objects.filter(user=self.user, default=True).exclude(
+                id=self.id
+            )
+            qs.update(default=False)
 
     class Meta:
         abstract = True
@@ -78,6 +88,7 @@ class Namespace(AbstractNamespace):
 
     class Meta(AbstractNamespace.Meta):
         abstract = False
+        swappable = swapper.swappable_setting("django_namespaces", "Namespace")
 
 
 class AnonymousNamespace:

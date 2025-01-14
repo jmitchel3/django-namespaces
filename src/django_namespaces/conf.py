@@ -13,7 +13,7 @@ class Settings:
     @property
     def DJANGO_NAMESPACE_MODEL(self) -> str:
         """
-        Tge default model to use for namespaces
+        The default model to use for namespaces
         """
         return getattr(
             django_settings,
@@ -92,25 +92,30 @@ class Settings:
         return getattr(django_settings, "DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL", "/")
 
     @property
-    def DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS(self) -> int:
+    def DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS(self) -> int:
         """
-        Duration to cache the context processor in Seconds
+        Duration to cache the queryset in Seconds
         Default is 1 hour
         """
-        return getattr(
-            django_settings, "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_SECONDS", 3600
-        )
+        return getattr(django_settings, "DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS", 3600)
 
     @property
-    def DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX(self) -> str:
+    def DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX(self) -> str:
         """
-        The prefix to use for the cache key for the context processor
+        The prefix to use for the cache key for the queryset
         """
         return getattr(
             django_settings,
-            "DJANGO_NAMESPACE_CONTEXT_PROCESSOR_CACHE_KEY_PREFIX",
-            "django_ns_cp_",
+            "DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX",
+            "dj:namespace:qs:",
         )
+
+    @property
+    def DJANGO_NAMESPACE_FIELDS(self) -> list[str]:
+        """
+        The fields to use for the namespace
+        """
+        return getattr(django_settings, "DJANGO_NAMESPACE_FIELDS", ["handle"])
 
 
 @lru_cache
