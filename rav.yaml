@@ -11,7 +11,7 @@ scripts:
     - cd sample_project && ../venv/bin/python manage.py makemigrations
     - ../venv/bin/python manage.py migrate
   test:
-    - venv/bin/tox run -f py31
+    - venv/bin/tox run -f py312
     - venv/bin/coverage combine
     - venv/bin/coverage report
   test_views:
