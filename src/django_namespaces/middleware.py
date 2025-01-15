@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Awaitable, Callable, Optional
+from typing import Awaitable
+from typing import Callable
 
 from django.http import HttpRequest
 from django.http.response import HttpResponseBase
@@ -53,9 +54,11 @@ class NamespaceMiddleware:
         return await result
 
 
-class AnonymousNamespace(object):
+class AnonymousNamespace:
     value = None
     handle = None
+    has_namespace = False
+    id = ""
 
 
 class NamespaceDetails:
@@ -64,7 +67,7 @@ class NamespaceDetails:
         self._namespace = self.request.session.get("namespace") or ""
         self._namespace_id = str(self.request.session.get("namespace_id")) or None
 
-    def __repr__(self) -> Optional[str]:
+    def __repr__(self) -> str | None:
         return f"<Namespace {self._namespace}>"
 
     def __str__(self) -> str:
