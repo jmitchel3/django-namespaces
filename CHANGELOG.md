@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added `has_namespace` and `id` properties to `AnonymousNamespace` class to handle non-activated/anonymous orgs.
+- Ensure view tests run first with [tests/conftest.py](tests/conftest.py).
 
 ## [0.0.24] - 2025-01-15
 
