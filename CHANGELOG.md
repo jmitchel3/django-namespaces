@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.23] - 2025-01-15
+
+### Added
+
+- If using a swappable Namespace model, unregister the default Namespace model from admin.
+
 ## [0.0.22] - 2025-01-14
 
 ### Added

@@ -1,13 +1,13 @@
+from __future__ import annotations
+
+import swapper
 from django.contrib import admin
 
-from django_namespaces.conf import settings
-from django_namespaces.import_utils import import_module_from_str
-
-Namespace = import_module_from_str(settings.DJANGO_NAMESPACE_MODEL)
+Namespace = swapper.load_model("django_namespaces", "Namespace")
 
 
 class NamespaceAdmin(admin.ModelAdmin):
-    list_display = ["handle", "title", "user", "modified"]
+    list_display = ["handle", "title", "user"]
     list_filter = ["created_at", "updated_at"]
     search_fields = ["handle", "title", "user__username"]
 
@@ -15,4 +15,6 @@ class NamespaceAdmin(admin.ModelAdmin):
         model = Namespace
 
 
-admin.site.register(Namespace)
+# Only register if the model hasn't been swapped
+if not swapper.is_swapped("django_namespaces", "Namespace"):
+    admin.site.register(Namespace, NamespaceAdmin)
