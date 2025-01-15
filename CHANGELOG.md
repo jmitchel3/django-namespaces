@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.24] - 2025-01-15
+
+### Added
+
+- Renamed default setting names to start with `DJANGO_NAMESPACES_` to avoid conflicts with other apps.
+
 ## [0.0.23] - 2025-01-15
 
 ### Added
