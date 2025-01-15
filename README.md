@@ -90,6 +90,23 @@ class Location(models.Model):
     namespace = models.ForeignKey(Namespace, on_delete=models.CASCADE)
 ```
 
+### Custom Namespace Model
+
+If you want to use a custom namespace model, you can do so by setting the `DJANGO_NAMESPACES_NAMESPACE_MODEL` setting.
+
+```python
+DJANGO_NAMESPACES_NAMESPACE_MODEL = "orgs.Organization"
+```
+Example model in `orgs.models.py`:
+```python
+from django.db import models
+
+
+class Organization(models.Model):
+    handle = models.CharField(max_length=255, unique=True)
+```
+- `handle` is the only required field to swap the model.
+
 ### Optional Views
 Using views are optional. You can also use the `activate` function to activate a namespace.
 

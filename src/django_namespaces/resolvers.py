@@ -11,6 +11,6 @@ def reverse(*args, **kwargs):
     Designed to be changed to django_hosts.reverse if needed
     """
     reverse = import_module_from_str(
-        django_namespaces_settings.DJANGO_NAMESPACE_URL_REVERSE_FUNCTION
+        django_namespaces_settings.DJANGO_NAMESPACES_URL_REVERSE_FUNCTION
     )
     return reverse(*args, **kwargs)

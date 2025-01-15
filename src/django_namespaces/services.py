@@ -5,8 +5,8 @@ from django.core.cache import cache
 
 from django_namespaces.conf import settings
 
-CACHE_SECONDS = settings.DJANGO_NAMESPACE_QUERYSET_CACHE_SECONDS
-CACHE_KEY_PREFIX = settings.DJANGO_NAMESPACE_QUERYSET_CACHE_KEY_PREFIX
+CACHE_SECONDS = settings.DJANGO_NAMESPACES_QUERYSET_CACHE_SECONDS
+CACHE_KEY_PREFIX = settings.DJANGO_NAMESPACES_QUERYSET_CACHE_KEY_PREFIX
 
 
 def get_cache_key(user=None):

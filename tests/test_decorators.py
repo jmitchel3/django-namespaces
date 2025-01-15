@@ -50,7 +50,7 @@ class NamespaceDecoratorTestCase(TestCase):
         response = test_view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")
@@ -71,7 +71,7 @@ class NamespaceDecoratorTestCase(TestCase):
         response = test_view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")
@@ -92,7 +92,7 @@ class NamespaceDecoratorTestCase(TestCase):
         response = test_view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")
@@ -135,7 +135,7 @@ class NamespaceMixinTestCase(TestCase):
         response = view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")
@@ -157,7 +157,7 @@ class NamespaceMixinTestCase(TestCase):
         response = view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")
@@ -179,7 +179,7 @@ class NamespaceMixinTestCase(TestCase):
         response = view(request)
 
         mock_get_template.assert_called_once_with(
-            settings.DJANGO_NAMESPACE_NEEDS_ACTIVATION_TEMPLATE
+            settings.DJANGO_NAMESPACES_NEEDS_ACTIVATION_TEMPLATE
         )
         mock_template.render.assert_called_once_with({}, request)
         self.assertEqual(response.content.decode(), "Please activate namespace")

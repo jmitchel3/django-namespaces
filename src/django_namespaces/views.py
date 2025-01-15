@@ -19,8 +19,8 @@ from django_namespaces.conf import settings
 from django_namespaces.import_utils import import_module_from_str
 
 Namespace = swapper.load_model("django_namespaces", "Namespace")
-NamespaceCreateForm = import_module_from_str(settings.DJANGO_NAMESPACE_CREATE_FORM)
-NamespaceUpdateForm = import_module_from_str(settings.DJANGO_NAMESPACE_UPDATE_FORM)
+NamespaceCreateForm = import_module_from_str(settings.DJANGO_NAMESPACES_CREATE_FORM)
+NamespaceUpdateForm = import_module_from_str(settings.DJANGO_NAMESPACES_UPDATE_FORM)
 
 
 class NamespaceListView(LoginRequiredMixin, ListView):
@@ -123,7 +123,7 @@ def namespace_activation_view(request, handle=None):
         return HttpResponse("OK")
 
     messages.success(request, f"{handle} activated.")
-    return HttpResponseRedirect(settings.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL)
+    return HttpResponseRedirect(settings.DJANGO_NAMESPACES_ACTIVATION_REDIRECT_URL)
 
 
 def clear_namespaces_view(request):

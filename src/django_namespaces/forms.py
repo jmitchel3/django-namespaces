@@ -14,7 +14,7 @@ def get_fields():
     if Namespace == _Namespace:
         return ["title", "handle", "description"]
     else:
-        return settings.DJANGO_NAMESPACE_FIELDS
+        return settings.DJANGO_NAMESPACES_FIELDS
 
 
 class NamespaceCreateForm(forms.ModelForm):

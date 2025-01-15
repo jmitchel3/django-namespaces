@@ -44,5 +44,5 @@ MIDDLEWARE = [
 USE_TZ = True
 
 # Django Namespaces settings
-DJANGO_NAMESPACE_MODEL = "django_namespaces.models.Namespace"
-DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL = "/"
+DJANGO_NAMESPACES_NAMESPACE_MODEL = "django_namespaces.Namespace"
+DJANGO_NAMESPACES_ACTIVATION_REDIRECT_URL = "/"

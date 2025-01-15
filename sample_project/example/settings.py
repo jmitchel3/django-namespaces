@@ -56,7 +56,7 @@ MIDDLEWARE = [
     "django_namespaces.middleware.NamespaceMiddleware",
 ]
 
-# DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION = 'example.blocked.blocked_namespaces'
+# DJANGO_NAMESPACES_BLOCKED_LIST_LOCATION = 'example.blocked.blocked_namespaces'
 
 ROOT_URLCONF = "example.urls"
 

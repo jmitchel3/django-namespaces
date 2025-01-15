@@ -195,7 +195,7 @@ class Namespace05ActivationViewTest(BaseNamespaceTest):
         self.assertEqual(str(messages[0]), f"{self.namespace.handle} activated.")
         self.assertEqual(
             response.redirect_chain[0][0],
-            settings.DJANGO_NAMESPACE_ACTIVATION_REDIRECT_URL,
+            settings.DJANGO_NAMESPACES_ACTIVATION_REDIRECT_URL,
         )
 
 

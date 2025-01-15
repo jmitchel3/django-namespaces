@@ -10,7 +10,7 @@ from django_namespaces.validators import valid_project_id
 
 class ValidatorsTest(TestCase):
     @override_settings(
-        DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION="tests.test_data.BLOCKED_LIST"
+        DJANGO_NAMESPACES_BLOCKED_LIST_LOCATION="tests.test_data.BLOCKED_LIST"
     )
     def test_get_blocked_list(self):
         # Test regular list retrieval
@@ -26,7 +26,7 @@ class ValidatorsTest(TestCase):
             self.assertIn(item, blocked_list_slugs)
 
     @override_settings(
-        DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION="tests.test_data.NOT_A_LIST"
+        DJANGO_NAMESPACES_BLOCKED_LIST_LOCATION="tests.test_data.NOT_A_LIST"
     )
     def test_get_blocked_list_invalid_type(self):
         blocked_list = get_blocked_list()
@@ -36,7 +36,7 @@ class ValidatorsTest(TestCase):
         )  # Should contain the default blocked items
 
     @override_settings(
-        DJANGO_NAMESPACE_BLOCKED_LIST_LOCATION="tests.test_data.BLOCKED_LIST"
+        DJANGO_NAMESPACES_BLOCKED_LIST_LOCATION="tests.test_data.BLOCKED_LIST"
     )
     def test_valid_project_id(self):
         # Test valid project id
