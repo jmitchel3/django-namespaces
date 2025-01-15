@@ -37,7 +37,7 @@ class BaseNamespaceTest(TestCase):
         self.client.login(username="admin", password="testpass123")
 
 
-class NamespaceListViewTest(BaseNamespaceTest):
+class Namespace01ListViewTest(BaseNamespaceTest):
     def test_namespace_list_view(self):
         response = self.client.get(reverse("django_namespaces:list"))
         self.assertEqual(response.status_code, 200)
@@ -67,7 +67,7 @@ class NamespaceListViewTest(BaseNamespaceTest):
         self.assertTemplateUsed(response, "django_namespaces/namespace_list.html")
 
 
-class NamespaceCreateViewTest(BaseNamespaceTest):
+class Namespace02CreateViewTest(BaseNamespaceTest):
     def test_namespace_create_view(self):
         response = self.client.get(reverse("django_namespaces:create"))
         self.assertEqual(response.status_code, 200)
@@ -98,7 +98,7 @@ class NamespaceCreateViewTest(BaseNamespaceTest):
         )
 
 
-class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
+class Namespace03DetailUpdateViewTest(BaseNamespaceTest):
     def setUp(self):
         super().setUp()
         # Create a test-specific namespace for each test
@@ -158,7 +158,7 @@ class NamespaceDetailUpdateViewTest(BaseNamespaceTest):
         self.assertIsInstance(response.context["activated"], bool)
 
 
-class NamespaceDeleteViewTest(BaseNamespaceTest):
+class Namespace04DeleteViewTest(BaseNamespaceTest):
     def test_namespace_delete_view(self):
         url = reverse(
             "django_namespaces:delete", kwargs={"handle": self.namespace.handle}
@@ -174,7 +174,7 @@ class NamespaceDeleteViewTest(BaseNamespaceTest):
         )
 
 
-class NamespaceActivationViewTest(BaseNamespaceTest):
+class Namespace05ActivationViewTest(BaseNamespaceTest):
     def test_namespace_activation_view(self):
         url = reverse(
             "django_namespaces:activate", kwargs={"handle": self.namespace.handle}
@@ -199,7 +199,7 @@ class NamespaceActivationViewTest(BaseNamespaceTest):
         )
 
 
-class NamespaceUnauthorizedAccessTest(BaseNamespaceTest):
+class Namespace06UnauthorizedAccessTest(BaseNamespaceTest):
     def setUp(self):
         super().setUp()
         self.other_user = User.objects.create_user(
@@ -240,7 +240,7 @@ class NamespaceUnauthorizedAccessTest(BaseNamespaceTest):
             )
 
 
-class NamespaceMessagesTest(BaseNamespaceTest):
+class Namespace07MessagesTest(BaseNamespaceTest):
     def setUp(self):
         super().setUp()
         # Remove the manual namespace creation since it's in the fixtures
@@ -282,7 +282,7 @@ class NamespaceMessagesTest(BaseNamespaceTest):
         self.assertEqual(str(messages[0]), "Namespace was deleted successfully.")
 
 
-class NamespaceClearViewTest(BaseNamespaceTest):
+class Namespace08ClearViewTest(BaseNamespaceTest):
     def test_clear_namespaces_view(self):
         response = self.client.get(reverse("django_namespaces:clear"))
         self.assertEqual(response.status_code, 302)
