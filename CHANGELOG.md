@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.25] - 2025-01-15
+
+### Added
+
+- Added `has_namespace` and `id` properties to `AnonymousNamespace` class to handle non-activated/anonymous orgs.
+
 ## [0.0.24] - 2025-01-15
 
 ### Added
