@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
 from django.test import TestCase
@@ -38,6 +39,7 @@ class BaseNamespaceTest(TestCase):
 
 
 class Namespace01ListViewTest(BaseNamespaceTest):
+    @pytest.mark.order(-1)
     def test_namespace_list_view(self):
         response = self.client.get(reverse("django_namespaces:list"))
         self.assertEqual(response.status_code, 200)
@@ -53,6 +55,7 @@ class Namespace01ListViewTest(BaseNamespaceTest):
 
         self.assertContains(response, f"View {self.namespace.handle}")
 
+    @pytest.mark.order(1)
     def test_htmx_list_view(self):
         response = self.client.get(
             reverse("django_namespaces:list"), HTTP_HX_REQUEST="true"
@@ -68,6 +71,7 @@ class Namespace01ListViewTest(BaseNamespaceTest):
 
 
 class Namespace02CreateViewTest(BaseNamespaceTest):
+    @pytest.mark.order(2)
     def test_namespace_create_view(self):
         response = self.client.get(reverse("django_namespaces:create"))
         self.assertEqual(response.status_code, 200)
@@ -80,6 +84,7 @@ class Namespace02CreateViewTest(BaseNamespaceTest):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Namespace.objects.filter(handle="new-namespace").exists())
 
+    @pytest.mark.order(3)
     def test_namespace_create_view_invalid_data(self):
         response = self.client.post(
             reverse("django_namespaces:create"),
@@ -88,6 +93,7 @@ class Namespace02CreateViewTest(BaseNamespaceTest):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Namespace.objects.filter(handle="").exists())
 
+    @pytest.mark.order(4)
     def test_htmx_create_view(self):
         response = self.client.get(
             reverse("django_namespaces:create"),
@@ -109,6 +115,7 @@ class Namespace03DetailUpdateViewTest(BaseNamespaceTest):
             user=self.user,
         )
 
+    @pytest.mark.order(5)
     def test_namespace_detail_update_view(self):
         url = reverse(
             "django_namespaces:detail-update",
@@ -131,6 +138,7 @@ class Namespace03DetailUpdateViewTest(BaseNamespaceTest):
         self.assertEqual(self.test_namespace.handle, "updated-namespace")
         self.assertEqual(self.test_namespace.title, "Updated Title")
 
+    @pytest.mark.order(6)
     def test_namespace_detail_update_view_invalid_data(self):
         url = reverse(
             "django_namespaces:detail-update",
@@ -148,6 +156,7 @@ class Namespace03DetailUpdateViewTest(BaseNamespaceTest):
         self.test_namespace.refresh_from_db()
         self.assertEqual(self.test_namespace.handle, "test-namespace")
 
+    @pytest.mark.order(7)
     def test_namespace_detail_context(self):
         url = reverse(
             "django_namespaces:detail-update",
@@ -159,6 +168,7 @@ class Namespace03DetailUpdateViewTest(BaseNamespaceTest):
 
 
 class Namespace04DeleteViewTest(BaseNamespaceTest):
+    @pytest.mark.order(8)
     def test_namespace_delete_view(self):
         url = reverse(
             "django_namespaces:delete", kwargs={"handle": self.namespace.handle}
@@ -175,6 +185,7 @@ class Namespace04DeleteViewTest(BaseNamespaceTest):
 
 
 class Namespace05ActivationViewTest(BaseNamespaceTest):
+    @pytest.mark.order(9)
     def test_namespace_activation_view(self):
         url = reverse(
             "django_namespaces:activate", kwargs={"handle": self.namespace.handle}
@@ -182,6 +193,7 @@ class Namespace05ActivationViewTest(BaseNamespaceTest):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
+    @pytest.mark.order(10)
     def test_namespace_activation_with_htmx(self):
         url = reverse(
             "django_namespaces:activate", kwargs={"handle": self.namespace.handle}
@@ -200,6 +212,7 @@ class Namespace05ActivationViewTest(BaseNamespaceTest):
 
 
 class Namespace06UnauthorizedAccessTest(BaseNamespaceTest):
+    @pytest.mark.order(11)
     def setUp(self):
         super().setUp()
         self.other_user = User.objects.create_user(
@@ -246,6 +259,7 @@ class Namespace07MessagesTest(BaseNamespaceTest):
         # Remove the manual namespace creation since it's in the fixtures
         pass
 
+    @pytest.mark.order(12)
     def test_create_success_message(self):
         new_handle = "message-test"
         response = self.client.post(
@@ -254,6 +268,7 @@ class Namespace07MessagesTest(BaseNamespaceTest):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), f"{new_handle} was created successfully.")
 
+    @pytest.mark.order(13)
     def test_update_success_message(self):
         updated_handle = "message-test-updated"
         response = self.client.post(
@@ -271,6 +286,7 @@ class Namespace07MessagesTest(BaseNamespaceTest):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(str(messages[0]), f"{updated_handle} was updated.")
 
+    @pytest.mark.order(14)
     def test_delete_success_message(self):
         response = self.client.post(
             reverse(
@@ -283,6 +299,7 @@ class Namespace07MessagesTest(BaseNamespaceTest):
 
 
 class Namespace08ClearViewTest(BaseNamespaceTest):
+    @pytest.mark.order(15)
     def test_clear_namespaces_view(self):
         response = self.client.get(reverse("django_namespaces:clear"))
         self.assertEqual(response.status_code, 302)
