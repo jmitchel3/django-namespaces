@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import swapper
 from django.core.cache import cache
+from django.db.models import QuerySet
 
 from django_namespaces.conf import settings
 
@@ -17,7 +18,7 @@ def get_cache_key(user=None):
     return f"{prefix}:{user.id}"
 
 
-def get_namespaces(user=None, use_caching=True, refresh_cache=False):
+def get_namespaces(user=None, use_caching=True, refresh_cache=False) -> QuerySet | list:
     NamespaceModel = swapper.load_model("django_namespaces", "Namespace")
     lookups = {}
     if "user" in NamespaceModel._meta.fields:
@@ -31,11 +32,13 @@ def get_namespaces(user=None, use_caching=True, refresh_cache=False):
         if qs is not None:
             return qs
 
-    # Always evaluate the queryset when not using cache
     if len(lookups) > 0:
-        qs = list(NamespaceModel.objects.filter(**lookups))
+        qs = NamespaceModel.objects.filter(**lookups)
     else:
-        qs = list(NamespaceModel.objects.all())
+        qs = NamespaceModel.objects.all()
+    if not use_caching:
+        # Always evaluate the queryset when not using cache
+        return list(qs)
 
     # Only cache if use_caching is True or explicitly refreshing
     if use_caching or refresh_cache:
