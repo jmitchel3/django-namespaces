@@ -5,9 +5,13 @@ from django.core.cache import cache
 from django.db.models import QuerySet
 
 from django_namespaces.conf import settings
+from django_namespaces.validators import validate_lookup_expression
 
 CACHE_SECONDS = settings.DJANGO_NAMESPACES_QUERYSET_CACHE_SECONDS
 CACHE_KEY_PREFIX = settings.DJANGO_NAMESPACES_QUERYSET_CACHE_KEY_PREFIX
+DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION = (
+    settings.DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION
+)
 
 
 def get_cache_key(user=None):
@@ -18,11 +22,25 @@ def get_cache_key(user=None):
     return f"{prefix}:{user.id}"
 
 
-def get_namespaces(user=None, use_caching=True, refresh_cache=False) -> QuerySet | list:
+def get_namespaces(
+    user=None,
+    use_caching=True,
+    refresh_cache=False,
+    user_lookup_expression=DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION,
+) -> QuerySet | list:
     NamespaceModel = swapper.load_model("django_namespaces", "Namespace")
     lookups = {}
-    if "user" in NamespaceModel._meta.fields:
+    if all(
+        [
+            user is not None,
+            "user" in [x.name for x in NamespaceModel._meta.get_fields()],
+            user_lookup_expression is None,
+        ]
+    ):
         lookups["user"] = user
+    elif all([user is not None, isinstance(user_lookup_expression, str)]):
+        if validate_lookup_expression(NamespaceModel, user_lookup_expression):
+            lookups[user_lookup_expression] = user
 
     cache_key = get_cache_key(user)
 
@@ -35,7 +53,7 @@ def get_namespaces(user=None, use_caching=True, refresh_cache=False) -> QuerySet
     if len(lookups) > 0:
         qs = NamespaceModel.objects.filter(**lookups)
     else:
-        qs = NamespaceModel.objects.all()
+        qs = NamespaceModel.objects.none()
     if not use_caching:
         # Always evaluate the queryset when not using cache
         return list(qs)

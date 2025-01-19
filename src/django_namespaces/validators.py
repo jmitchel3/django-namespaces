@@ -43,3 +43,33 @@ def valid_project_id(value: str) -> None:
         raise ValidationError(_(f"{value} is not allowed as a namespace."))
     if value in blocked_list_as_slugs:
         raise ValidationError(_(f"{value} is not a valid namespace."))
+
+
+def validate_lookup_expression(model, lookup_expression: str) -> bool:
+    """
+    Validates if a lookup expression is valid for a given model.
+
+    Args:
+        model: Django model class
+        lookup_expression: String representing the lookup path (e.g., 'user__group__name')
+
+    Returns:
+        bool: True if valid
+
+    Raises:
+        ValueError: If the lookup expression is invalid
+    """
+    model_dot_path = f"{model._meta.app_label}.models.{model.__name__}"
+    try:
+        parts = lookup_expression.split("__")
+        current_model = model
+
+        for part in parts:
+            field = current_model._meta.get_field(part)
+            if hasattr(field, "remote_field") and field.remote_field:
+                current_model = field.remote_field.model
+        return True
+    except Exception as e:
+        msg = f"""Error with `settings.DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION='{lookup_expression}'`.
+The model `{model_dot_path}` cannot be queried with this expression. {e}"""
+        raise ValueError(msg)

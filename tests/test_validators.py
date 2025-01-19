@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from django_namespaces.validators import get_blocked_list
 from django_namespaces.validators import valid_project_id
+from django_namespaces.validators import validate_lookup_expression
 
 
 class ValidatorsTest(TestCase):
@@ -65,3 +66,18 @@ class ValidatorsTest(TestCase):
         # Test too long
         with self.assertRaises(ValidationError):
             valid_project_id("a" * 64)
+
+    def test_validate_lookup_expression(self):
+        from django.contrib.auth.models import User
+
+        # Test valid lookup expressions
+        self.assertTrue(validate_lookup_expression(User, "username"))
+        self.assertTrue(validate_lookup_expression(User, "groups__name"))
+
+        # Test invalid lookup expressions
+        with self.assertRaises(ValueError):
+            validate_lookup_expression(User, "nonexistent_field")
+        with self.assertRaises(ValueError):
+            validate_lookup_expression(User, "groups__nonexistent")
+        with self.assertRaises(ValueError):
+            validate_lookup_expression(User, "invalid__path__to__field")

@@ -13,6 +13,9 @@ from django_namespaces.services import get_namespaces
 
 class NamespaceUtilsTestCase(TestCase):
     def setUp(self):
+        # Clear cache before each test
+        cache.clear()
+
         User = get_user_model()
         self.user = User.objects.create_user(
             username="testuser", password="testpass123"
@@ -20,12 +23,12 @@ class NamespaceUtilsTestCase(TestCase):
         self.namespace = Namespace.objects.create(
             user=self.user, handle="testnamespace"
         )
-        # Clear cache before each test
-        cache.clear()
 
     def tearDown(self):
-        # Clean up cache after each test
+        # Clean up both cache and test database after each test
         cache.clear()
+        Namespace.objects.all().delete()
+        get_user_model().objects.all().delete()
 
     def test_get_cache_key(self):
         """Test cache key generation"""
@@ -61,7 +64,7 @@ class NamespaceUtilsTestCase(TestCase):
         self.assertEqual(list(initial_namespaces), list(refreshed_namespaces))
 
     def test_get_namespaces_no_cache(self):
-        """Test that use_caching=False bypasses cache"""
+        """Test that use_caching=False bypasses cache and returns a list"""
         # Should hit database each time when use_caching is False
         with self.assertNumQueries(1):
             namespaces1 = get_namespaces(
@@ -73,4 +76,12 @@ class NamespaceUtilsTestCase(TestCase):
                 self.user, use_caching=False, refresh_cache=False
             )
 
-        self.assertEqual(list(namespaces1), list(namespaces2))
+        # Verify we get lists back, not QuerySets
+        self.assertIsInstance(namespaces1, list)
+        self.assertIsInstance(namespaces2, list)
+        self.assertEqual(namespaces1, namespaces2)
+
+        # Verify the actual content
+        self.assertEqual(len(namespaces1), 1)
+        self.assertEqual(namespaces1[0].handle, "testnamespace")
+        self.assertEqual(namespaces1[0].user, self.user)

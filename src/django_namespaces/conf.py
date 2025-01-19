@@ -22,6 +22,15 @@ class Settings:
         )
 
     @property
+    def DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION(self) -> str | None:
+        """
+        The lookup expression to use for the user
+        """
+        return getattr(
+            django_settings, "DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION", None
+        )
+
+    @property
     def DJANGO_NAMESPACES_BLOCKED_LIST_LOCATION(self) -> str:
         """
         Dot notation for the location of the list of namespaces

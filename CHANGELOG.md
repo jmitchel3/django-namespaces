@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.27] - 2025-01-19
+
+### Added
+
+- Added `validate_lookup_expression` method to `validators` module to validate lookup expressions.
+- Added `DJANGO_NAMESPACES_USER_LOOKUP_EXPRESSION` setting to `conf` module to allow for custom lookup expressions.
+- Updated `get_namespaces` method to use lookup expression if provided (useful for custom namespace models).
+
 ## [0.0.26] - 2025-01-16
 
 ### Added
